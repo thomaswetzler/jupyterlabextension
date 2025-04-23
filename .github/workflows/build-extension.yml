@@ -7,6 +7,11 @@ on:
     branches: [ main ]
   workflow_dispatch:  # Allow manual triggering
 
+# Explicitly set permissions for creating releases
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -44,31 +49,51 @@ jobs:
         
     - name: Build extension
       run: |
-        yarn run build:prod
+        yarn run build
+        
+    - name: Debug directory structure
+      run: |
+        echo "Current working directory: $(pwd)"
+        ls -la
+        echo "Contents of lib (if exists):"
+        ls -la lib || echo "lib directory doesn't exist"
+        echo "Contents of style:"
+        ls -la style
         
     - name: Create tarball
       run: |
         mkdir -p dist
-        tar -czf dist/jupyterlab-environment-manager.tar.gz lib/ style/ package.json README.md LICENSE
+        # Check if lib directory exists, if not use src instead
+        if [ -d "lib" ]; then
+          tar -czf dist/jupyterlab-environment-manager.tar.gz lib/ style/ package.json README.md LICENSE
+        else
+          echo "Warning: lib directory doesn't exist, using src instead"
+          tar -czf dist/jupyterlab-environment-manager.tar.gz src/ style/ package.json README.md LICENSE
+        fi
+        echo "Tarball created:"
+        ls -la dist/
         
     - name: Upload tarball as artifact
       uses: actions/upload-artifact@v3
       with:
         name: jupyterlab-extension-tarball
         path: dist/jupyterlab-environment-manager.tar.gz
-        
-    - name: Create GitHub Release
+    
+    # Only create a release on tags, not on every commit
+    - name: Create GitHub Release on Tag
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
         files: dist/jupyterlab-environment-manager.tar.gz
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-  create-release-on-main:
+  create-nightly-release:
     needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Explicitly set permissions for creating releases
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Download tarball artifact
         uses: actions/download-artifact@v3
@@ -78,9 +103,9 @@ jobs:
           
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
           
-      - name: Create Release
+      - name: Create Nightly Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
@@ -92,5 +117,3 @@ jobs:
             This is an automated build from the main branch.
           files: dist/jupyterlab-environment-manager.tar.gz
           prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
