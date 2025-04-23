@@ -1,7 +1,7 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { KernelOperations } from '../services/kernelOperations';
 import { FileOperations } from '../services/fileOperations';
-import { Notification } from '@jupyterlab/apputils';
+import { NotificationService } from '../services/notificationService';
 
 /**
  * Command ID for running pip-compile and pip install.
@@ -20,7 +20,7 @@ export function registerCommand(
   app: JupyterFrontEnd,
   kernelOps: KernelOperations,
   fileOps: FileOperations,
-  notification: Notification
+  notification: NotificationService
 ): void {
   app.commands.addCommand(CommandID, {
     label: 'Run pip-compile and pip install',

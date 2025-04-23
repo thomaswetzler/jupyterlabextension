@@ -1,6 +1,7 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { KernelOperations } from '../services/kernelOperations';
-import { showDialog, Dialog, Notification } from '@jupyterlab/apputils';
+import { showDialog, Dialog } from '@jupyterlab/apputils';
+import { NotificationService } from '../services/notificationService';
 
 /**
  * Command ID for deleting a kernel.
@@ -17,7 +18,7 @@ export const CommandID = 'environment-manager:delete-kernel';
 export function registerCommand(
   app: JupyterFrontEnd,
   kernelOps: KernelOperations,
-  notification: Notification
+  notification: NotificationService
 ): void {
   app.commands.addCommand(CommandID, {
     label: 'Delete Project Kernel',

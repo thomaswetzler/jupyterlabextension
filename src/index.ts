@@ -6,11 +6,11 @@ import {
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { IMainMenu } from '@jupyterlab/mainmenu';
-import { Notification } from '@jupyterlab/apputils';
 
 import { ContextProvider } from './services/contextProvider';
 import { FileOperations } from './services/fileOperations';
 import { KernelOperations } from './services/kernelOperations';
+import { NotificationService } from './services/notificationService';
 
 import * as createKernel from './commands/createKernel';
 import * as pipCommand from './commands/pipCommand';
@@ -57,7 +57,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     );
 
     // Create notification service
-    const notification = new Notification();
+    const notification = new NotificationService();
 
     // Register commands
     createKernel.registerCommand(app, kernelOperations, notification);

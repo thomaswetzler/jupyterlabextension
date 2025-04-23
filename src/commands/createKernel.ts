@@ -1,6 +1,7 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { KernelOperations } from '../services/kernelOperations';
-import { showDialog, Dialog, Notification } from '@jupyterlab/apputils';
+import { showDialog, Dialog } from '@jupyterlab/apputils';
+import { NotificationService } from '../services/notificationService';
 
 /**
  * Command ID for creating a kernel.
@@ -17,7 +18,7 @@ export const CommandID = 'environment-manager:create-kernel';
 export function registerCommand(
   app: JupyterFrontEnd,
   kernelOps: KernelOperations,
-  notification: Notification
+  notification: NotificationService
 ): void {
   app.commands.addCommand(CommandID, {
     label: 'Create Project Kernel',
@@ -68,9 +69,9 @@ export function registerCommand(
 }
 
 /**
- * A simple widget to get Python version input.
+ * A widget for Python version input.
  */
-class PythonVersionInput {
+class PythonVersionInput implements Dialog.IBodyWidget<string> {
   constructor() {
     this.node = document.createElement('div');
     this._input = document.createElement('input');
@@ -91,4 +92,10 @@ class PythonVersionInput {
   
   readonly node: HTMLElement;
   private _input: HTMLInputElement;
+  
+  // Required by Dialog.IBodyWidget interface
+  dispose(): void {}
+  get isDisposed(): boolean {
+    return false;
+  }
 }

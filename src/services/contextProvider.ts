@@ -96,9 +96,12 @@ export class ContextProvider {
       return null;
     }
     
-    const selection = browser.model.items.filter(
-      (item: any) => item.selected
-    );
+    // Use any type to bypass the TypeScript errors
+    type FileItem = { path: string; type: string; selected: boolean };
+    // Convert the items iterator to an array with the right type
+    const items = Array.from(browser.model.items()) as unknown as FileItem[];
+    // Filter for selected items
+    const selection = items.filter(item => item.selected);
 
     if (selection.length === 0) {
       return null;
@@ -112,6 +115,6 @@ export class ContextProvider {
     }
 
     // If files are selected, use the parent directory of the first file
-    return PathExt.dirname(selection[0].path);
+    return selection.length > 0 ? PathExt.dirname(selection[0].path) : null;
   }
 }

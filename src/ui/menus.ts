@@ -25,8 +25,8 @@ export function addMainMenuEntries(
   projectMenu.addItem({ command: deleteKernel.CommandID });
   projectMenu.addItem({ command: `${deleteKernel.CommandID}-reset` });
   
-  // Add the menu to the main menu
-  mainMenu.addMenu(projectMenu, { rank: 60 });
+  // Add the menu to the main menu (without rank)
+  mainMenu.addMenu(projectMenu);
 }
 
 /**
