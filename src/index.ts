@@ -6,8 +6,7 @@ import {
 import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { IMainMenu } from '@jupyterlab/mainmenu';
-import { INotification } from '@jupyterlab/apputils';
-import { Contents } from '@jupyterlab/services';
+import { Notification } from '@jupyterlab/apputils';
 
 import { ContextProvider } from './services/contextProvider';
 import { FileOperations } from './services/fileOperations';
@@ -28,15 +27,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
   requires: [
     IFileBrowserFactory,
     INotebookTracker,
-    IMainMenu,
-    INotification
+    IMainMenu
   ],
   activate: (
     app: JupyterFrontEnd,
     fileBrowserFactory: IFileBrowserFactory,
     notebookTracker: INotebookTracker,
-    mainMenu: IMainMenu,
-    notification: INotification
+    mainMenu: IMainMenu
   ) => {
     console.log('JupyterLab Environment Manager extension is activated!');
 
@@ -58,6 +55,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
       contextProvider,
       fileOperations
     );
+
+    // Create notification service
+    const notification = new Notification();
 
     // Register commands
     createKernel.registerCommand(app, kernelOperations, notification);

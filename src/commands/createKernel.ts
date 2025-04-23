@@ -1,7 +1,6 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { KernelOperations } from '../services/kernelOperations';
-import { showDialog, Dialog } from '@jupyterlab/apputils';
-import { INotification } from '@jupyterlab/apputils';
+import { showDialog, Dialog, Notification } from '@jupyterlab/apputils';
 
 /**
  * Command ID for creating a kernel.
@@ -18,7 +17,7 @@ export const CommandID = 'environment-manager:create-kernel';
 export function registerCommand(
   app: JupyterFrontEnd,
   kernelOps: KernelOperations,
-  notification: INotification
+  notification: Notification
 ): void {
   app.commands.addCommand(CommandID, {
     label: 'Create Project Kernel',
@@ -69,19 +68,27 @@ export function registerCommand(
 }
 
 /**
- * A widget to input Python version.
+ * A simple widget to get Python version input.
  */
-class PythonVersionInput extends Dialog.InputDialog {
+class PythonVersionInput {
   constructor() {
-    super({
-      title: 'Python Version',
-      placeholder: '3.11',
-      label: 'Enter Python version:',
-      value: '3.11',
-      accept: value => {
-        // Simple validation for Python version format
-        return /^\d+\.\d+$/.test(value);
-      }
-    });
+    this.node = document.createElement('div');
+    this._input = document.createElement('input');
+    this._input.placeholder = '3.11';
+    this._input.value = '3.11';
+    
+    const label = document.createElement('label');
+    label.textContent = 'Enter Python version:';
+    
+    this.node.appendChild(label);
+    this.node.appendChild(document.createElement('br'));
+    this.node.appendChild(this._input);
   }
+  
+  getValue(): string {
+    return this._input.value;
+  }
+  
+  readonly node: HTMLElement;
+  private _input: HTMLInputElement;
 }

@@ -1,6 +1,6 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { IMainMenu } from '@jupyterlab/mainmenu';
-import { CommandRegistry } from '@lumino/commands';
+import { Menu } from '@lumino/widgets';
 import * as createKernel from '../commands/createKernel';
 import * as pipCommand from '../commands/pipCommand';
 import * as deleteKernel from '../commands/deleteKernel';
@@ -15,28 +15,18 @@ export function addMainMenuEntries(
   app: JupyterFrontEnd,
   mainMenu: IMainMenu
 ): void {
-  const { commands } = app;
-  
   // Create Project menu
-  mainMenu.addMenu({
-    rank: 60,
-    label: 'Project',
-    menu: {
-      id: 'environment-manager-menu'
-    }
-  });
-
+  const projectMenu = new Menu({ commands: app.commands });
+  projectMenu.title.label = 'Project';
+  
   // Add commands to Project menu
-  const projectMenu = mainMenu.menus.find(
-    menu => menu.id === 'environment-manager-menu'
-  );
-
-  if (projectMenu) {
-    projectMenu.addItem({ command: createKernel.CommandID });
-    projectMenu.addItem({ command: pipCommand.CommandID });
-    projectMenu.addItem({ command: deleteKernel.CommandID });
-    projectMenu.addItem({ command: `${deleteKernel.CommandID}-reset` });
-  }
+  projectMenu.addItem({ command: createKernel.CommandID });
+  projectMenu.addItem({ command: pipCommand.CommandID });
+  projectMenu.addItem({ command: deleteKernel.CommandID });
+  projectMenu.addItem({ command: `${deleteKernel.CommandID}-reset` });
+  
+  // Add the menu to the main menu
+  mainMenu.addMenu(projectMenu, { rank: 60 });
 }
 
 /**

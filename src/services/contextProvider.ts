@@ -1,5 +1,5 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
-import { IFileBrowserFactory } from '@jupyterlab/filebrowser';
+import { IFileBrowserFactory, FileBrowser } from '@jupyterlab/filebrowser';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { PathExt } from '@jupyterlab/coreutils';
 
@@ -8,7 +8,7 @@ import { PathExt } from '@jupyterlab/coreutils';
  */
 export class ContextProvider {
   constructor(
-    private app: JupyterFrontEnd,
+    private _app: JupyterFrontEnd,
     private fileBrowserFactory: IFileBrowserFactory,
     private notebookTracker: INotebookTracker
   ) {}
@@ -37,7 +37,8 @@ export class ContextProvider {
     }
     
     // Use the current file browser directory
-    return this.fileBrowserFactory.defaultBrowser.model.path;
+    const browser = this.fileBrowserFactory.tracker.currentWidget;
+    return browser ? browser.model.path : '';
   }
 
   /**
@@ -90,8 +91,13 @@ export class ContextProvider {
    * @returns The selected directory path or null
    */
   private getSelectionDirectory(): string | null {
-    const selection = this.fileBrowserFactory.defaultBrowser.model.items.filter(
-      item => item.selected
+    const browser = this.fileBrowserFactory.tracker.currentWidget;
+    if (!browser) {
+      return null;
+    }
+    
+    const selection = browser.model.items.filter(
+      (item: any) => item.selected
     );
 
     if (selection.length === 0) {
