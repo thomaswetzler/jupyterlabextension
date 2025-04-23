@@ -74,7 +74,7 @@ jobs:
         ls -la dist/
         
     - name: Upload tarball as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: jupyterlab-extension-tarball
         path: dist/jupyterlab-environment-manager.tar.gz
@@ -82,9 +82,10 @@ jobs:
     # Only create a release on tags, not on every commit
     - name: Create GitHub Release on Tag
       if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
+      uses: ncipollo/release-action@v1
       with:
-        files: dist/jupyterlab-environment-manager.tar.gz
+        artifacts: "dist/jupyterlab-environment-manager.tar.gz"
+        token: ${{ secrets.GITHUB_TOKEN }}
         
   create-nightly-release:
     needs: build
@@ -96,7 +97,7 @@ jobs:
       packages: write
     steps:
       - name: Download tarball artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: jupyterlab-extension-tarball
           path: dist
@@ -107,13 +108,14 @@ jobs:
           
       - name: Create Nightly Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: nightly-${{ steps.date.outputs.date }}
+          tag: nightly-${{ steps.date.outputs.date }}
           name: Nightly Build ${{ steps.date.outputs.date }}
           body: |
             Nightly build of the JupyterLab Environment Manager extension.
             
             This is an automated build from the main branch.
-          files: dist/jupyterlab-environment-manager.tar.gz
+          artifacts: "dist/jupyterlab-environment-manager.tar.gz"
           prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
