@@ -1,0 +1,71 @@
+# TypeScript/JavaScript
+node_modules/
+lib/
+dist/
+*.tsbuildinfo
+*.js.map
+coverage/
+*.min.js
+*.min.js.map
+
+# JupyterLab extension specific
+jupyterlab_*/
+labextension/
+.ipynb_checkpoints
+jupyter_execute/
+
+# Python
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Package specific
+.env
+*.log
+
+# Build and packaging
+build/
+*.swp
+.jlpm-work/
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# IDE specific files
+.idea/
+.vscode/
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*~
+tmp/
+temp/
+
+# Local development
+.jupyter/
+.jupyterlab/
+memory-bank/

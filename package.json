@@ -1,0 +1,87 @@
+{
+  "name": "jupyterlab-environment-manager",
+  "version": "0.1.0",
+  "description": "JupyterLab extension for managing environments and kernels",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "conda",
+    "pip",
+    "kernel"
+  ],
+  "homepage": "https://github.com/thomaswetzler/jupyterlabextension",
+  "bugs": {
+    "url": "https://github.com/thomaswetzler/jupyterlabextension/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": {
+    "name": "JupyterLab Extension Developer",
+    "email": "your-email@example.com"
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/*.css",
+    "schema/*.json"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaswetzler/jupyterlabextension.git"
+  },
+  "scripts": {
+    "build": "jlpm build:lib && jlpm build:labextension:dev",
+    "build:prod": "jlpm clean && jlpm build:lib && jlpm build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "clean": "jlpm clean:lib",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "clean:all": "jlpm clean:lib && jlpm clean:labextension",
+    "clean:labextension": "rimraf jupyterlab_environment_manager/labextension",
+    "eslint": "eslint . --ext .ts,.tsx --fix",
+    "eslint:check": "eslint . --ext .ts,.tsx",
+    "install:extension": "jlpm build",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:src": "tsc -w",
+    "watch:labextension": "jupyter labextension watch ."
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^4.0.0",
+    "@jupyterlab/apputils": "^4.0.0",
+    "@jupyterlab/coreutils": "^6.0.0",
+    "@jupyterlab/filebrowser": "^4.0.0",
+    "@jupyterlab/launcher": "^4.0.0",
+    "@jupyterlab/mainmenu": "^4.0.0",
+    "@jupyterlab/notebook": "^4.0.0",
+    "@jupyterlab/services": "^7.0.0",
+    "@lumino/algorithm": "^2.0.0",
+    "@lumino/commands": "^2.0.0",
+    "@lumino/disposable": "^2.0.0",
+    "@lumino/widgets": "^2.0.0"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.0.0",
+    "@types/node": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.7",
+    "rimraf": "^4.4.1",
+    "typescript": "~5.0.4"
+  },
+  "sideEffects": [
+    "style/*.css",
+    "style/index.js"
+  ],
+  "styleModule": "style/index.js",
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "jupyterlab_environment_manager/labextension"
+  }
+}
