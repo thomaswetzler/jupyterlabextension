@@ -27,7 +27,12 @@ jobs:
         
     - name: Build extension
       run: |
-        npm run build
+        npm install
+        # Use the build:lib script which runs tsc
+        npm run build:lib
+        echo "Contents after build:"
+        ls -la
+        mkdir -p style
         
     - name: Create package
       run: |
