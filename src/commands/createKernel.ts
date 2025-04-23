@@ -24,15 +24,15 @@ export function registerCommand(
     label: 'Create Project Kernel',
     caption: 'Create a conda environment and register it as a kernel',
     execute: async () => {
-      // Get Python version from user
+      // Use a really simple dialog
       const result = await showDialog({
         title: 'Create Project Kernel',
-        body: new PythonVersionInput(),
+        body: 'Enter Python version (e.g., 3.11):',
         buttons: [Dialog.cancelButton(), Dialog.okButton()]
       });
 
       if (result.button.accept) {
-        const pythonVersion = (result.value as string) || '3.11';
+        const pythonVersion = result.value as string || '3.11';
         
         // Show notification
         const toastId = notification.emit('Creating project kernel...');
@@ -68,34 +68,4 @@ export function registerCommand(
   });
 }
 
-/**
- * A widget for Python version input.
- */
-class PythonVersionInput implements Dialog.IBodyWidget<string> {
-  constructor() {
-    this.node = document.createElement('div');
-    this._input = document.createElement('input');
-    this._input.placeholder = '3.11';
-    this._input.value = '3.11';
-    
-    const label = document.createElement('label');
-    label.textContent = 'Enter Python version:';
-    
-    this.node.appendChild(label);
-    this.node.appendChild(document.createElement('br'));
-    this.node.appendChild(this._input);
-  }
-  
-  getValue(): string {
-    return this._input.value;
-  }
-  
-  readonly node: HTMLElement;
-  private _input: HTMLInputElement;
-  
-  // Required by Dialog.IBodyWidget interface
-  dispose(): void {}
-  get isDisposed(): boolean {
-    return false;
-  }
-}
+// No need for a custom PythonVersionInput class
