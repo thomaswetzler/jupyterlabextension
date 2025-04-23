@@ -1,0 +1,39 @@
+/* 
+ * JupyterLab Environment Manager Extension Styling
+ */
+
+.environment-manager-loading {
+  display: inline-block;
+  margin-right: 5px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.environment-manager-icon {
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-width: 16px;
+  min-height: 16px;
+  margin-right: 4px;
+}
+
+.environment-manager-success {
+  color: var(--jp-success-color0, #28a745);
+}
+
+.environment-manager-error {
+  color: var(--jp-error-color0, #dc3545);
+}
+
+.environment-manager-warning {
+  color: var(--jp-warn-color0, #f9c642);
+}
+
+.environment-manager-info {
+  color: var(--jp-info-color0, #17a2b8);
+}

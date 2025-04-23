@@ -1,0 +1,51 @@
+name: Build JupyterLab Extension
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+        
+    - name: Install dependencies
+      run: |
+        npm install
+        
+    - name: Build extension
+      run: |
+        npm install
+        # Use the build:lib script which runs tsc
+        npm run build:lib
+        echo "Contents after build:"
+        ls -la
+        mkdir -p style
+        
+    - name: Create package
+      run: |
+        mkdir -p dist
+        tar -czf jupyterlab-extension.tar.gz lib/ style/ package.json README.md LICENSE || \
+        tar -czf jupyterlab-extension.tar.gz src/ style/ package.json README.md LICENSE
+        
+    - name: Release
+      uses: softprops/action-gh-release@v0.1.15
+      if: startsWith(github.ref, 'refs/heads/main')
+      with:
+        tag_name: release-${{ github.run_number }}
+        name: Build ${{ github.run_number }}
+        files: jupyterlab-extension.tar.gz
+        draft: false
+        prerelease: false
